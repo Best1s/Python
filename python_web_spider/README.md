@@ -18,6 +18,6 @@ web爬虫的学习过程记录
 * [html_analysis](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/html_analysis/bs4)下是beautifysoup4，css选择器，xpath的使用方法
 * [html_storage](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/html_storage)是无数据库下的存储方法，包括txt,csv,json,二进制存储
 * [requests_lib](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/requests_lib)是request库的使用方法
-* [simple_Spider](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/sipmple_Spider)是一个爬虫项目，拥有基础的5个爬虫模块，见目录下[README.md](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/html_storage/README.md)
-* [urillib](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/urillib)
+* [simple_Spider](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/sipmple_Spider)是一个爬虫项目，拥有基础的5个爬虫模块，见目录下[README.md](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/simple_Spider)
+* [urillib](https://github.com/Best1s/python_re/tree/master/python_web_spider/web_spider/urllib)
 
