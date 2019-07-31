@@ -1,0 +1,6 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE person (id integer primart key,name varchart(255),age integer);
+INSERT INTO person VALUES(NULL,'qiye',20);
+CREATE TABLE testcsv (id integer primary key,name varchart(30),password varchart(30),age int(5),country varchart(255));
+COMMIT;

@@ -1,0 +1,265 @@
+#Create Scrapy project
+
+scrapy startproject project_name
+
+dir:
+
+project_name
+  | scrapy.cfg
+  |
+_____project_name
+    | items.py
+    | pipelines.py
+    | settings.py
+    | __init__.py
+    |
+     __spiders
+            __init__.py
+
+
+1: name   用于区别Spider 必须唯一
+2: start_urls  启动Spider时进行爬取入口的URL列表
+3: parse()  Spider的一个方法。
+
+#选择器 Selector
+1:xpath(query)
+2:css(query)
+3:extract() 序列化该节点为Unicode字符串，返回list列表
+4:re(regex)
+
+spider类中的parse()方法中，其中传入一个 response对象就可以  构造出一个 Selector 对象
+
+
+#验证表达式是否正确：  scrapy shell "http://xxxxx.com"  response.xpath(query)
+
+scrapy 提供了两种类型的命令，一种在Scrapu项目中运行，另一种在则不需要属于全局命令
+
+全局命令：
+startproject      scrapy startproject <project_name>
+settings      scrapy settings [options]
+runspider   scrapy runspider <spider_file.py>  运行编写好的spider模块
+shell     scrapy shell [url] 
+fetch    scrapy fetch <url>  使用Scrapy下载器下载指定url,并将内容送到标准输出
+view     view(resopnse) 在浏览器中打开指定url
+version  scrapy version[-v] -v同时输出Python,Twisted以及平台的信息，
+bench       scrapy bench 运行benchmark测试
+
+项目命令：
+crawl     scrapy crawl <spider>
+check     scrapy check [-l] <spider>   运行contract检查
+list      scrapy list   列出当前项目中可用的spider
+edit      scrapy edit <spider>    使用的编辑器编辑给定的spider.改命令仅提供一个快捷方式
+parse     scrapy parse <url> [options]  获取给定的URL 并使用相应的spider分析处理
+支持选项：
+--spider=SPIDER   跳过自动检查spider 并强制使用特定的spider
+--a NAME=VALUE    设置是spider的参数
+--callback or -c    spider中用于解析response的回调函数
+--pipelines       在pipeline中处理item
+--rules or -re    使用CrawlSpider规则来发现用于解析response的回调函数
+--noitems         不显示爬取到的item
+--nolinks         不显示爬取到的链接
+--nocolour        避免使用pygments对输出着色
+--depth or -de    指定跟进链接请求的层次数
+--verbose or -v   显示每个请求的详细信息
+
+genspider scrapy genspider [-t template] <name> <domain>
+deploy    scrapy deploy [<target:project> | -l <target> | -L] 将项目部署到Scrapyd服务。
+
+items 定义  将获取的数据结构化
+
+构建item Pipelines :数据进行持久化存储  当Item在Spider中被收集之后，它就会被传递到Item Pipeline
+一些组件会安装顺序执行对Item的处理, 主要有一下应用
+清理HTML数据
+验证数据的合法性，检查Item是否包含某些字段
+查重丢弃
+将爬取的数据保存到文件或者数据库中
+
+
+
+#定制Item Pipeline
+
+每个Item Pipeline 组件是一个独立的python类 必须实现process_item方法，原型如下
+process_item(self,item,spider)
+每个Item Pipeline组件都需要调用该方法，该方法必须返回一个Item 或抛出DropItem异常  被丢弃的Item不会被组件处理
+参数：
+Item对象是被爬取的Item
+Spider对象代表着爬取该Item的Spider
+
+激活Item Pipeline  定制完Item Pipeline后需要进行激活启用
+将它的类添加到settings.py 中的ITEM_PIPELINES变量中 代码如下  在setting找到ITEM_PIPELINES 取消掉注释即可
+
+ITEM_PIPELINES = {
+    'cnblogSpider.pipelines.CnblogspiderPipeline': 300,
+}
+
+ITEM_PIPELINES 可配置多个 Item Pipeline 组件  分配精准值确定运行顺序 0~1000  越小优先级越高。
+
+
+内置数据存储  除了Item Pipeline     Scrapy内置了一些简单的存储方式
+
+JSON
+FEED_FORMAT:json
+所用内置输出类 JsonItemExporter
+
+JSON lines
+FEED_FORMAT:jsonlines
+所用内置输出类 JsonLinesItemExporter
+
+CSV
+FEED_FORMAT:csv
+所用内置输出类 CsvItemExporter
+
+XML
+FEED_FORMAT:xml
+所用内置输出类 XmlItemExporter
+
+Pickle
+FEED_FORMAT:pickle
+所用内置输出类 PickleItemExporter
+
+Marshal
+FEED_FORMAT:marshal
+所用内置输出类 MarshalItemExporter
+使用方式：将命令行切换到项目目录，  比如保存CSV格式 输入命令scrapy crawl cnblogs -o papers.csv
+
+内置图片和文件下载方式
+MediaPipeline     FilesPipeline or ImagesPipeline
+
+1.在settings.py文件的 ITEM_PIPELINES中添加一条'scrapy.pipelines.files.FilesPipeline':1
+2.在item中添加两个字段，比如
+file_urls = scrapy.Field()
+files = scrapy.Field()
+
+3.在settings.py中添加下载路径FILES_STORE
+FILES_STORE = '/XXX/XX/XX'           #下载路径
+FILES_URLS_FIELD = 'file_urls'       #文件url所在item字段
+FILES_RESULT_FIELD = 'files'         #文件信息所在item字段
+使用FILES_EXPIRES设置文件过期时间   FILES_EXPIRES = 30    #30天过期
+
+除了启动爬虫  scrapy crawl spider_name   还提供API在程序中启动爬虫
+Scrapy 是在Twisted异步网络库上构建，因此必须在 Twisted reactor里运行
+
+if __name__=='__main__':
+  process = CrawlerProcess({
+    'USER_AGENT':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'
+  })
+  process.crawl(CnblogsSpider)
+  process.start()
+
+可以在CrawlerProcess 初始化时传入设置的参数，使用crawl方式运行指定的爬虫类
+也可以在CrawlerProcess初始化传入项目的settings信息在crawl方法中传入爬虫名字
+if __name__=='__main__':
+  process = CrawlerProcess(get_project_settings())
+  process.crawl('cnblogs')
+  process.start()
+
+另一种是使用CrawlerRunner 在spider运行结束后 必须关闭Twisted reactor,需要在CrawlerRunner.crawl所返回的对象中添加回调函数
+if __name__=='__main__':
+  configure_logging({'LOG_FORMAT':'%(levelname)s:%(message)s'})
+  runner = CrawlerRunner()
+  d = runner.crawl(CnblogsSpider)
+  d.addBoth(lambda_:reactor.stop())
+  reactor.run()
+
+
+
+一个进程中可以启动多个爬虫
+
+import scrapy
+from scrapy.crawler import CrawlerProcess
+
+class MySpider1(scrapy.Spider):
+  #Your firest spider definition
+  ...
+
+class MySpider2(scrapy.Spider):
+  #Your firest spider definition
+  ...
+process = CrawlerProcess()
+process.crawl(MySpider1)
+process.crawl(MySpider2)
+process.start()
+
+第二种实现方法
+import scrapy
+from twisted.internet import reactor
+from scrapy.crawler import CrawlerRunner
+from scrapy.utils.log import configure_logging
+
+class MySpider1(scrapy.Spider):
+  #Your firest spider definition
+  ...
+
+class MySpider2(scrapy.Spider):
+  #Your firest spider definition
+  ...
+configure_logging()
+runner = CrawlerRunner()
+runner.crawl(MySpider1)
+runner.crawl(MySpider2)
+d = runner.join()
+d.addBoth(lambda_:reactor.stop())
+reactor.run()
+
+第三种实现方式
+
+from twisted.internet import reactor,defer
+from scrapy.crawler import CrawlerRunner
+from scrapy.utils.log import configure_logging
+
+class MySpider1(scrapy.Spider):
+  #Your firest spider definition
+  ...
+
+class MySpider2(scrapy.Spider):
+  #Your firest spider definition
+  ...
+
+configure_logging()
+runner = CrawlerRunner()
+@defer.inlineCallbacks
+def crawl():
+  yield runner.crawl(MySpider1)
+  yield runner.crawl(MySpider2)
+  reactor.stop()
+crawl()
+reactor.run()
+
+Scrapy调试，异常，控制
+调试技术：Parse命令， Scrapy shell和logging
+1.Parse 命令：  查看特定url爬取到的item scrapy parse --spider=<spidename> -c <parse_item> -d 2<item_url>
+配合--verbose或-v 可以查看各个层次详细状态
+
+2.Scrapy shell
+scrapy.shell.inspect_response方法查看spider某个位置被处理的response
+以确定response是否达到期望的位置  在parse方法里添加两句代码
+from scrapy.shell import imspect_response
+inspect_response(response,self)
+执行程序时  程序运行到inspect_response方法时会暂停并切换到shell中 可方便对当前的response调试
+
+3.configure_logging
+
+异常                原型
+DropItem        
+CloseSpider
+IgnoreRequest
+NotConfigured
+NotSupported
+
+控制运行状态telent
+telnet终端监听设置中定义的TELNETCONSOLE_PORT 默认6023
+Scrapy telnet 提供的默认变量
+
+快捷命令名称	          描述
+crawler    	      Scrapy Crawler (scrapy.crawler.Crawler 对象)
+engine 	          Crawler.engine属性
+spider  	        当前激活的爬虫(spider)
+slot 	            the engine slot
+extensions	      扩展管理器(manager) (Crawler.extensions属性)
+stats 	          状态收集器 (Crawler.stats属性)
+settings	        Scrapy设置(setting)对象 (Crawler.settings属性)
+est	              打印引擎状态的报告
+prefs 	          针对内存调试 (参考调试内存溢出)
+p                	pprint.pprint 函数的简写
+hpy	              针对内存调试 (参考 调试内存溢出)
+Telnet          	console usage examples

@@ -1,0 +1,35 @@
+$def with (state)
+$if state:
+  <em style="color: red; font-size: 2em;">Sorry,you account or password error!</em>.
+  <br>
+<h1>Login </h1>
+<form action="/admin" method="POST">
+  username: <input type="text" name="username">
+  <br>  
+  password: <input type="text" name="password">
+  <br>
+  <button type="submit">登录</button>
+  <!--<input type="submit">-->
+  <br>
+
+</form>
+
+
+<!--
+  <input id="valid-inp" name="validcode" class="form-control" type="password" placeholder="请输入验证码" autocomplete="off">
+  <span id="valid-img"><img id="img" src="../verify/test.png" title="点击再换一张" alt="验证码图片"></span>
+
+ <div id="page_container">
+	<--暗文密码输入框--
+	<div class="input_block" id="psw_invisible">
+		<img id="visible" onclick="showPsw()" src="visible.png">
+		<input type="password" id="input_invisible" placeholder="Password"/>
+	</div>
+	<--明文密码输入框--
+	<div class="input_block1" id="psw_visible1" style="display: none;">
+		<img id="invisible1" onclick="hidePsw()" src="invisible.png">
+		<input type="text" id="input_visible1" placeholder="Password"/>
+	</div>
+ 
+	<button onclick="submit">Login</button>
+</div> -->

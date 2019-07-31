@@ -1,0 +1,5 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE person (id integer primart key,name varchart(255),age integer);
+INSERT INTO person VALUES(NULL,'qiye',20);
+COMMIT;
