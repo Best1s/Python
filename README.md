@@ -1,5 +1,5 @@
 ## Python_re
-#### [Core_Python_Programming]()记录了一些关键语法和库的使用
+#### [Core_Python_Programming](https://github.com/Best1s/python_re/tree/master/Core_Python_Programming)记录了一些关键语法和库的使用
   * [chapter-1](https://github.com/Best1s/python_re/tree/master/Core_Python_Programming/chapter-1)一个随机过去数据的方法。
   * [chapter-2](https://github.com/Best1s/python_re/tree/master/Core_Python_Programming/chapter-2)socker的使用及通讯。
   * [chapter-3](https://github.com/Best1s/python_re/tree/master/Core_Python_Programming/chapter-3)多线程技术和分布式进程的使用、
