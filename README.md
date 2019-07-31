@@ -6,7 +6,7 @@
 #### [python_syntax](https://github.com/Best1s/python_re/tree/master/python_syntax)一些python的语法使用，及python虚拟环境的搭建和一个Django框架的web项目
 #### [python_web_spider](https://github.com/Best1s/python_re/tree/master/python_web_spider)爬虫的使用，见目录下[README.md](https://github.com/Best1s/python_re/tree/master/python_web_spider)
 #### [demo](https://github.com/Best1s/python_re/tree/master/demo)是一个演示 
-
+#### [Faas](https://github.com/Best1s/python_re/tree/master/Faas)腾讯云的无函数服务使用
 
 
 Happy !!!
